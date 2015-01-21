@@ -19,20 +19,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-var exports = module.exports = {};
-
 function Point(_X, _Y) {
     this.X = _X;
     this.Y = _Y;
 }
 
-Point.prototype = {
-    getMedian: function getMedian(p1, p2) {
-        var midX = (p1.X + p2.X)/2;
-        var midY = (p1.Y + p2.Y)/2;
-        return new Point(midX, midY);
-    }
-};
+function getMedian(p1, p2) {
+    var midX = (p1.X + p2.X)/2;
+    var midY = (p1.Y + p2.Y)/2;
+    return new Point(midX, midY);
+}
 
 function QuadTree(_upperPoint, _lowerPoint, _center) {
     this.upperPoint = _upperPoint;
@@ -97,5 +93,5 @@ QuadTree.prototype = {
 };
 
 // Export all objects
-exports.Point = Point;
-exports.QuadTree = QuadTree;
+module.exports.Point = Point;
+module.exports.QuadTree = QuadTree;
