@@ -141,6 +141,11 @@ function insert(root, point) {
         // console.log('Making center ' + point + ' of ' + root);
         root.center = point;
     } else if (root.isLeaf()) {
+        // Ignore same points
+        if (root.center.isSame(point)) {
+            return;
+        }
+
         // Make a copy of the current point
         var currentRootPoint = root.center;
 
