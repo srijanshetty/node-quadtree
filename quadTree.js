@@ -192,51 +192,46 @@ function pointQuery(root, point) {
 
 // Perform a range query
 function rangeQuery(root, point, radius) {
-    console.log(root.toString());
     if (root === null || root.isEmpty()) {
         return false;
     }
 
     // If we have reached an object, print it
-    if (root.isLeaf()) {
+    if (root.isLeaf() && root.center.getDistance(point) <= radius) {
         console.log(root.center.toString());
         return;
     }
 
     // Check all quadrants
-    if (root.firstQuad && root.firstQuad.getMinDistance(point) < radius) {
+    if (root.firstQuad && root.firstQuad.getMinDistance(point) <= radius) {
         rangeQuery(root.firstQuad, point, radius);
     }
 
-    if (root.secondQuad && root.secondQuad.getMinDistance(point) < radius) {
+    if (root.secondQuad && root.secondQuad.getMinDistance(point) <= radius) {
         rangeQuery(root.secondQuad, point, radius);
     }
 
-    if (root.thirdQuad && root.thirdQuad.getMinDistance(point) < radius) {
+    if (root.thirdQuad && root.thirdQuad.getMinDistance(point) <= radius) {
         rangeQuery(root.thirdQuad, point, radius);
     }
 
-    if (root.fourthQuad && root.fourthQuad.getMinDistance(point) < radius) {
+    if (root.fourthQuad && root.fourthQuad.getMinDistance(point) <= radius) {
         rangeQuery(root.fourthQuad, point, radius);
     }
 }
 /*---------------------------------------------*/
 
-// Export all objects
-module.exports.Point = Point;
-module.exports.QuadTree = QuadTree;
+/*---------------------------------------------*/
+var fs = require('fs');
 
-var lp = new Point(0,0);
-var up = new Point(1,1);
+var root = new QuadTree(new Point(1, 1), new Point(0,0));
+fs.readFileSync('./assgn2data.txt').toString().split('\n')
+    .forEach(function processLine(line) {
+        var point = line.split('\t');
 
-var q1 = new QuadTree(up, lp);
-insert(q1, new Point(0.3,0.3));
-insert(q1, new Point(0.2,0.2));
-insert(q1, new Point(0.7,0.7));
-insert(q1, new Point(0.1,0.1));
-insert(q1, new Point(0.6,0.6));
-insert(q1, new Point(0.6,0.6));
-insert(q1, new Point(0.6,0.6));
+        if (point[0] && point[1]) {
+            insert(root, new Point(parseFloat(point[0]), parseFloat(point[1])));
+        }
+    });
 
-rangeQuery(q1, new Point(0.5, 0.5), 1);
-// consose.log(JSON.stringify(q1, null, 2));
+rangeQuery(root, new Point(0.5, 0.5), 2);
