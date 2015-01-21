@@ -29,16 +29,25 @@ Point.prototype = {
     getMedian: function getMedian(p1, p2) {
         var midX = (p1.X + p2.X)/2;
         var midY = (p1.Y + p2.Y)/2;
+
         return new Point(midX, midY);
     },
 
-    toString: function toString() {
-        return '(' + this.X + ', ' + this.Y + ')';
+    getDistance: function getDistance(p1) {
+        var X = this.X - p1.X;
+        var Y = this.Y - p1.Y;
+
+        return Math.sqrt(X * X + Y * Y);
     },
 
     isSame: function isSame(p1) {
         return (this.X === p1.X && this.Y === p1.Y);
+    },
+
+    toString: function toString() {
+        return '(' + this.X + ', ' + this.Y + ')';
     }
+
 };
 /*---------------------------------------------*/
 
