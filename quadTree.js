@@ -159,10 +159,57 @@ function insert(root, point) {
         insert(root.getQuadrant(point), point);
     } else {
         // If it is an internal node, then we delegate
-        console.log('Moving forward from ' + root);
         insert(root.getQuadrant(point), point);
     }
 }
+
+// Perform a point query
+function pointQuery(root, point) {
+    if (root === null || root.isEmpty()) {
+        return false;
+    }
+
+    // Otherwise we recurse
+    if (root.isLeaf() && root.center.isSame(point)) {
+        // console.log(root.center.toString());
+        return;
+    }
+
+    // Recurse forward if it's not a leaf
+    return pointQuery(root.getQuadrant(point), point);
+}
+
+// Perform a range query
+function rangeQuery(root, point, radius) {
+    console.log(root.toString());
+    if (root === null || root.isEmpty()) {
+        return false;
+    }
+
+    // If we have reached an object, print it
+    if (root.isLeaf()) {
+        console.log(root.center.toString());
+        return;
+    }
+
+    // Check all quadrants
+    if (root.firstQuad && root.firstQuad.getMinDistance(point) < radius) {
+        rangeQuery(root.firstQuad, point, radius);
+    }
+
+    if (root.secondQuad && root.secondQuad.getMinDistance(point) < radius) {
+        rangeQuery(root.secondQuad, point, radius);
+    }
+
+    if (root.thirdQuad && root.thirdQuad.getMinDistance(point) < radius) {
+        rangeQuery(root.thirdQuad, point, radius);
+    }
+
+    if (root.fourthQuad && root.fourthQuad.getMinDistance(point) < radius) {
+        rangeQuery(root.fourthQuad, point, radius);
+    }
+}
+/*---------------------------------------------*/
 
 // Export all objects
 module.exports.Point = Point;
@@ -175,5 +222,10 @@ var q1 = new QuadTree(up, lp);
 insert(q1, new Point(0.3,0.3));
 insert(q1, new Point(0.2,0.2));
 insert(q1, new Point(0.7,0.7));
+insert(q1, new Point(0.1,0.1));
+insert(q1, new Point(0.6,0.6));
+insert(q1, new Point(0.6,0.6));
+insert(q1, new Point(0.6,0.6));
 
+rangeQuery(q1, new Point(0.5, 0.5), 1);
 // consose.log(JSON.stringify(q1, null, 2));
