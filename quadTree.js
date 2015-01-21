@@ -77,6 +77,8 @@ QuadTree.prototype = {
         } else {
             return this.fourthQuad;
         }
+
+        console.log('ERROR');
     },
 
     // Get the min distance of a point from the current quadrant
@@ -102,7 +104,7 @@ QuadTree.prototype = {
         }
 
         // Return the distance
-        return Math.sqrt(xcontrib*xcontrib + ycontrib*ycontrib);
+        return Math.sqrt(xcontrib * xcontrib + ycontrib * ycontrib);
     },
 
     split: function() {
@@ -132,10 +134,11 @@ QuadTree.prototype = {
     }
 };
 
+// Insert element to the tree
 function insert(root, point) {
     if (root.isEmpty()) {
         // If the current node is empty, make root the point
-        console.log('Making center ' + point + ' of ' + root);
+        // console.log('Making center ' + point + ' of ' + root);
         root.center = point;
     } else if (root.isLeaf()) {
         // Make a copy of the current point
