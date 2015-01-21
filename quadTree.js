@@ -147,9 +147,11 @@ QuadTree.prototype = {
 function insert(root, point) {
     if (root.isEmpty()) {
         // If the current node is empty, make root the point
-        // console.log('Making center ' + point + ' of ' + root);
         root.center = point;
+        // console.log('Making center ' + point + ' of ' + root);
     } else if (root.isLeaf()) {
+        // console.log('Splitting ' + root);
+
         // Ignore same points
         if (root.center.isSame(point)) {
             return;
@@ -180,7 +182,7 @@ function pointQuery(root, point) {
 
     // Otherwise we recurse
     if (root.isLeaf() && root.center.isSame(point)) {
-        // console.log(root.center.toString());
+        console.log(root.center.toString());
         return;
     }
 
