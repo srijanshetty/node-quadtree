@@ -19,21 +19,30 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/* ---------------- POINT -------------------- */
 function Point(_X, _Y) {
     this.X = _X;
     this.Y = _Y;
 }
 
-Point.prototype.toString = function (){
-    return '(' + this.X + ',' + this.Y + ')';
+Point.prototype = {
+    getMedian: function getMedian(p1, p2) {
+        var midX = (p1.X + p2.X)/2;
+        var midY = (p1.Y + p2.Y)/2;
+        return new Point(midX, midY);
+    },
+
+    toString: function toString() {
+        return '(' + this.X + ', ' + this.Y + ')';
+    },
+
+    isSame: function isSame(p1) {
+        return (this.X === p1.X && this.Y === p1.Y);
+    }
 };
+/*---------------------------------------------*/
 
-function getMedian(p1, p2) {
-    var midX = (p1.X + p2.X)/2;
-    var midY = (p1.Y + p2.Y)/2;
-    return new Point(midX, midY);
-}
-
+/* ---------------- QuadTree ----------------- */
 function QuadTree(_upperPoint, _lowerPoint, _center) {
     this.upperPoint = _upperPoint;
     this.lowerPoint = _lowerPoint;
@@ -97,8 +106,9 @@ QuadTree.prototype = {
     },
 
     split: function() {
+        // console.log('Splitting ' + this);
         // Compute all the required points
-        var centerPoint = getMedian(this.upperPoint, this.lowerPoint);
+        var centerPoint = Point.prototype.getMedian(this.upperPoint, this.lowerPoint);
         var secondUpper = new Point(centerPoint.X, this.upperPoint.Y);
         var secondLower = new Point(this.lowerPoint.X, centerPoint.Y);
         var fourthUpper = new Point(this.upperPoint.X, centerPoint.Y);
