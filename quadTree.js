@@ -463,7 +463,7 @@ module.exports.pointQuery = pointQuery;
 var fs = require('fs');
 
 var root = new QuadTree(new Point(1, 1), new Point(0,0));
-fs.readFileSync('./temp.txt').toString().split('\n')
+fs.readFileSync('./assgn2data.txt').toString().split('\n')
 .forEach(function processLine(line) {
     var parsedLine = line.split('\t');
 
@@ -472,7 +472,7 @@ fs.readFileSync('./temp.txt').toString().split('\n')
     }
 });
 
-fs.readFileSync('./tempQuery.txt').toString().split('\n')
+fs.readFileSync('./assgn2querysample.txt').toString().split('\n')
 .forEach(function processQueryLine(line) {
     var parsedLine = line.split('\t');
 
