@@ -15,5 +15,8 @@
     "quadtree"
   ],
   "author": "Srijan R Shetty <srijan.shetty+code@gmail.com> (http://srijanshetty.in/)",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "priorityqueuejs": "^0.2.0"
+  }
 }

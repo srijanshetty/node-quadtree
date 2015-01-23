@@ -19,6 +19,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+var PriorityQueue = require('priorityqueuejs');
+
 /* ---------------- POINT -------------------- */
 function Point(_X, _Y) {
     this.X = _X;
@@ -47,7 +49,20 @@ Point.prototype = {
     toString: function toString() {
         return '(' + this.X + ', ' + this.Y + ')';
     }
+};
 
+/*---------------------------------------------*/
+
+/* ---------------- PAIR -------------------- */
+function Pair(_first, _second) {
+    this.first = _first;
+    this.second = _second;
+}
+
+Pair.prototype = {
+    toString: function toString() {
+        return '(' + this.first + ', ' + this.second + ')';
+    }
 };
 /*---------------------------------------------*/
 
@@ -222,6 +237,38 @@ function rangeQuery(root, point, radius) {
 
 // Function to implement kNN search
 function kNNquery(root, point, number) {
+    // Create a priority queue with the root node
+    var queue = new PriorityQueue(function (p1, p2) {
+        return p1.second < p2.second;
+    });
+    queue.enq(new Pair(root, 0));
+
+    // create a list to maintain answers
+    var answers = [];
+
+    var top, node, minDistance;
+    while (!queue.isEmpty() && answers.length < number) {
+        top = queue.deq();
+        node = top.first;
+        minDistance = top.second;
+
+        if (node.isEmpty()) {
+            continue;
+        }
+
+        // If it is a leaf node and the distance of the node to the point
+        // is less than current distance then enqueue
+        if (node.isLeaf()) {
+            answers.push(node);
+            console.log(node.center.toString());
+        } else {
+            // Enqueue all internal nodes
+            queue.enq(new Pair(node.firstQuad, node.firstQuad.getMinDistance(point)));
+            queue.enq(new Pair(node.secondQuad, node.secondQuad.getMinDistance(point)));
+            queue.enq(new Pair(node.thirdQuad, node.thirdQuad.getMinDistance(point)));
+            queue.enq(new Pair(node.fourthQuad, node.fourthQuad.getMinDistance(point)));
+        }
+    }
 }
 
 // Export API
@@ -243,4 +290,5 @@ fs.readFileSync('./temp.txt').toString().split('\n')
         }
     });
 
-rangeQuery(root, new Point(0.5, 0.5), 2);
+// rangeQuery(root, new Point(0.5, 0.5), 2);
+kNNquery(root, new Point(0.5, 0.5), 2);
