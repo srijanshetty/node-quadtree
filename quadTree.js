@@ -219,13 +219,22 @@ function rangeQuery(root, point, radius) {
         rangeQuery(root.fourthQuad, point, radius);
     }
 }
-/*---------------------------------------------*/
 
-/*---------------------------------------------*/
+// Function to implement kNN search
+function kNNquery(root, point, number) {
+}
+
+// Export API
+module.exports.QuadTree = QuadTree;
+module.exports.insert = insert;
+module.exports.kNNquery = kNNquery;
+module.exports.rangeQuery = rangeQuery;
+module.exports.pointQuery = pointQuery;
+
 var fs = require('fs');
 
 var root = new QuadTree(new Point(1, 1), new Point(0,0));
-fs.readFileSync('./assgn2data.txt').toString().split('\n')
+fs.readFileSync('./temp.txt').toString().split('\n')
     .forEach(function processLine(line) {
         var point = line.split('\t');
 
