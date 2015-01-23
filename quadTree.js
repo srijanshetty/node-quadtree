@@ -148,7 +148,7 @@ QuadTree.prototype = {
             return this.secondQuad;
         } else if (this.thirdQuad && this.thirdQuad.getMinDistance(point) === 0) {
             return this.thirdQuad;
-        } else {
+        } else if (this.fourthQuad && this.fourthQuad.getMinDistance(point) === 0){
             return this.fourthQuad;
         }
 
@@ -450,7 +450,7 @@ function windowQuery(root, upperPoint, lowerPoint) {
 
     // If they lie in two quadrants
     windowQuery(upperPointQuad, upperPoint, upperPointQuad.project(lowerPoint));
-    windowQuery(lowerPointQuad, upperPointQuad.project(upperPoint), lowerPoint);
+    windowQuery(lowerPointQuad, lowerPointQuad.project(upperPoint), lowerPoint);
 }
 
 // Export API
@@ -465,19 +465,26 @@ var fs = require('fs');
 var root = new QuadTree(new Point(1, 1), new Point(0,0));
 fs.readFileSync('./assgn2data.txt').toString().split('\n')
 .forEach(function processLine(line) {
-    var parsedLine = line.split('\t');
-
-    if (parsedLine[0] && parsedLine[1]) {
-        insert(root, new Point(parseFloat(parsedLine[0]), parseFloat(parsedLine[1])));
+    if (line === '') {
+        return;
     }
+
+    var parsedLine = line.split('\t');
+    insert(root, new Point(parseFloat(parsedLine[0]), parseFloat(parsedLine[1])));
 });
 
 fs.readFileSync('./assgn2querysample.txt').toString().split('\n')
 .forEach(function processQueryLine(line) {
-    var parsedLine = line.split('\t');
+    if (line === '') {
+        return;
+    }
 
+    // Log the read line
+    console.log(line);
+
+    var parsedLine = line.split('\t');
     var code = parseInt(parsedLine[0], 10);
-    if (code && (code <= 4 && code >= 0)) {
+    if (code <= 4 && code >= 0) {
         var queryPoint = new Point(parseFloat(parsedLine[1]), parseFloat(parsedLine[2]));
         var queryPoint2;
         if (code === 0) {
@@ -485,17 +492,20 @@ fs.readFileSync('./assgn2querysample.txt').toString().split('\n')
         } else if (code === 1) {
             pointQuery(root, queryPoint);
         } else if (code === 2) {
-            rangeQuery(root, queryPoint, parseInt(parsedLine[3], 10));
+            rangeQuery(root, queryPoint, parseFloat(parsedLine[3], 10));
         } else if (code === 3) {
             kNNquery(root, queryPoint, parseInt(parsedLine[3], 10));
         } else {
             queryPoint2 = new Point(parseFloat(parsedLine[3]), parseFloat(parsedLine[4]));
-            if (queryPoint.X > queryPoint2.X && queryPoint.Y > queryPoint2.Y) {
-                windowQuery(root, queryPoint, queryPoint2);
+            if (queryPoint2.X > queryPoint.X && queryPoint2.Y > queryPoint.Y) {
+                windowQuery(root, queryPoint2, queryPoint);
+            } else if (queryPoint.X > queryPoint2.X && queryPoint.Y > queryPoint2.Y) {
+                windowQuery(root, queryPoint2, queryPoint);
             } else {
                 // TODO: Handle this case
-                // windowQuery(root, queryPoint2, queryPoint);
             }
         }
     }
+
+    console.log();
 });
