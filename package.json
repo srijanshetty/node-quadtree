@@ -1,0 +1,19 @@
+{
+  "name": "node-quadtree",
+  "version": "1.0.0",
+  "description": "a node quadtree implementation",
+  "main": "quadTree.js",
+  "scripts": {
+    "test": "node quadTree.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "y"
+  },
+  "keywords": [
+    "node",
+    "quadtree"
+  ],
+  "author": "Srijan R Shetty <srijan.shetty+code@gmail.com> (http://srijanshetty.in/)",
+  "license": "MIT"
+}
