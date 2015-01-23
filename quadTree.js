@@ -239,7 +239,6 @@ QuadTree.prototype = {
       Split QuadTree into four quadrants
       */
     split: function() {
-        // console.log('Splitting ' + this);
         // Compute all the required points
         var centerPoint = Point.prototype.getMedian(this.upperPoint, this.lowerPoint);
         var secondUpper = new Point(centerPoint.X, this.upperPoint.Y);
@@ -274,7 +273,6 @@ function insert(root, point) {
     if (root.isEmpty()) {
         // If the current node is empty, make root the point
         root.center = point;
-        // console.log('Making center ' + point + ' of ' + root);
     } else if (root.isLeaf()) {
         // Ignore same points
         if (root.center.isSame(point)) {
@@ -467,15 +465,37 @@ var fs = require('fs');
 var root = new QuadTree(new Point(1, 1), new Point(0,0));
 fs.readFileSync('./temp.txt').toString().split('\n')
 .forEach(function processLine(line) {
-    var point = line.split('\t');
+    var parsedLine = line.split('\t');
 
-    if (point[0] && point[1]) {
-        insert(root, new Point(parseFloat(point[0]), parseFloat(point[1])));
+    if (parsedLine[0] && parsedLine[1]) {
+        insert(root, new Point(parseFloat(parsedLine[0]), parseFloat(parsedLine[1])));
     }
 });
 
-// rangeQuery(root, new Point(0.5, 0.5), 2);
-// kNNquery(root, new Point(0.5, 0.5), 4);
-windowQuery(root, new Point(1, 1), new Point(0,0));
-// var temp = new QuadTree(new Point(0.5, 0.5), new Point(0, 0));
-// console.log(temp.project(new Point(0.5, 0.75)));
+fs.readFileSync('./tempQuery.txt').toString().split('\n')
+.forEach(function processQueryLine(line) {
+    var parsedLine = line.split('\t');
+
+    var code = parseInt(parsedLine[0], 10);
+    if (code && (code <= 4 && code >= 0)) {
+        var queryPoint = new Point(parseFloat(parsedLine[1]), parseFloat(parsedLine[2]));
+        var queryPoint2;
+        if (code === 0) {
+            insert(root, queryPoint);
+        } else if (code === 1) {
+            pointQuery(root, queryPoint);
+        } else if (code === 2) {
+            rangeQuery(root, queryPoint, parseInt(parsedLine[3], 10));
+        } else if (code === 3) {
+            kNNquery(root, queryPoint, parseInt(parsedLine[3], 10));
+        } else {
+            queryPoint2 = new Point(parseFloat(parsedLine[3]), parseFloat(parsedLine[4]));
+            if (queryPoint.X > queryPoint2.X && queryPoint.Y > queryPoint2.Y) {
+                windowQuery(root, queryPoint, queryPoint2);
+            } else {
+                // TODO: Handle this case
+                // windowQuery(root, queryPoint2, queryPoint);
+            }
+        }
+    }
+});
